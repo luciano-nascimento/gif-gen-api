@@ -5,8 +5,21 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const _ = require('lodash');
 const { v4: uuidv4 } = require('uuid');
+const { spawn } = require('child_process');
+const fs = require('fs');
 
 const app = express();
+
+let uploadDirName = './uploads';
+let downloadDirName = './downloads';
+
+if (!fs.existsSync(uploadDirName)) {
+    fs.mkdirSync(uploadDirName);
+}
+
+if (!fs.existsSync(downloadDirName)) {
+    fs.mkdirSync(downloadDirName);
+}
 
 // enable files upload
 app.use(fileUpload({
@@ -41,7 +54,11 @@ app.post('/generate-gif', async(req, res) => {
             let videofile = req.files.videofile;
             let fileid = uuidv4();
 
-            videofile.mv('./uploads/' + fileid + '-' + videofile.name);
+            let videofilename = fileid + '-' + videofile.name;
+
+            videofile.mv('./uploads/' + videofilename);
+
+            convertVideoToGif(videofilename);
 
             //send response
             res.send({
@@ -58,3 +75,29 @@ app.post('/generate-gif', async(req, res) => {
         res.status(500).send(err);
     }
 });
+
+app.get('/download/:filename', (req, res) => {
+    res.download('./download/' + req.params.filename);
+});
+
+function convertVideoToGif(videofilename) {
+
+    try {
+        var convertCommand = spawn('ffmpeg', ['-i', process.cwd() + '/uploads/' + videofilename, '-s', '320x240', '-r', '5', 'downloads/' + videofilename.replace(/\.[^/.]+$/, "") + '.gif']);
+    } catch (error) {
+        console.log(error);
+    }
+
+    convertCommand.stdout.on('data', (data) => {
+        console.log(`stdout: ${data}`);
+    });
+
+    convertCommand.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+    });
+
+    convertCommand.on('close', (code) => {
+        console.log(`child process exited with code ${code}`);
+    });
+
+}
