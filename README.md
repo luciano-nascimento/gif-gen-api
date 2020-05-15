@@ -4,11 +4,21 @@ Main goal is create a api that allows generate gifs from video
 
 ## Installation
 
-in progress ...
+You have to nstall those guys:
+
+ffmpeg:
+
+```bash
+sudo apt install ffmpeg
+```
+
+nodejs:
+
+check how to do that here: https://nodejs.org/en/download/package-manager/
 
 ## Usage
 
-just do a post passing the video on field "videofile" then you will receive a link to download your gif ;)
+Just do a post to /generate-gif passing the video on field "videofile" then you will receive a link to download your gif ;)
 
 as you can see on this example below i got a good result:
 
