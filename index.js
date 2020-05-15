@@ -68,7 +68,8 @@ app.post('/generate-gif', async(req, res) => {
                     name: videofile.name,
                     mimetype: videofile.mimetype,
                     size: videofile.size
-                }
+                },
+                download_url: '/download/' + videofilename.replace(/\.[^/.]+$/, "") + '.gif'
             });
         }
     } catch (err) {
@@ -77,7 +78,15 @@ app.post('/generate-gif', async(req, res) => {
 });
 
 app.get('/download/:filename', (req, res) => {
-    res.download('./download/' + req.params.filename);
+    console.log('test');
+    console.log(req.params.filename);
+    try {
+        res.download('./downloads/' + req.params.filename);
+        console.log('downloading...');
+    } catch (error) {
+        console.log(error);
+    }
+
 });
 
 function convertVideoToGif(videofilename) {
