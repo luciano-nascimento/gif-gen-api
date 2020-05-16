@@ -1,5 +1,4 @@
-node_modules
+src/node_modules
 notes
-uploads
-temp-files
-downloads
+src/uploads
+src/downloads
