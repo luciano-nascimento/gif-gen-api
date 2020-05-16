@@ -30,7 +30,7 @@ docker container run -p 8585:8585  gif-gen-api
 Just do a post to /generate-gif passing the video on field "videofile" then you will receive a link to download your gif ;)
 take a look:
 
-![request image](request.png)
+![request image](readme-assets/request.png)
 
 as you can see on this example below i got a good result:
 
